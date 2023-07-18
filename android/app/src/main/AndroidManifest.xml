@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.fotoverse">
    <application
-        android:label="fotoverse"
+        android:label="Fotoverse"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
