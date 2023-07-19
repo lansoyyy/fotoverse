@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fotoverse/screens/add_image_screen.dart';
 import 'package:fotoverse/utils/colors.dart';
 import 'package:fotoverse/widgets/drawer_widget.dart';
 import 'package:fotoverse/widgets/text_widget.dart';
@@ -16,7 +17,10 @@ class HomeScreen extends StatelessWidget {
             Icons.add,
             color: Colors.white,
           ),
-          onPressed: () {}),
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => const AddImageScreen()));
+          }),
       body: Container(
         height: double.infinity,
         width: double.infinity,
