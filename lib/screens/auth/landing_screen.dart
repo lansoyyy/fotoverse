@@ -19,63 +19,65 @@ class LandingScreen extends StatelessWidget {
           color: primary,
         ),
         child: SafeArea(
-            child: Column(
-          children: [
-            Image.asset(
-              'assets/images/logo.png',
-              height: 200,
-            ),
-            TextBold(
-              text: 'Get Started by creating an',
-              fontSize: 18,
-              color: Colors.white,
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            TextBold(
-              text: 'account or loggin into an',
-              fontSize: 18,
-              color: Colors.white,
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            TextBold(
-              text: 'existing one.',
-              fontSize: 18,
-              color: Colors.white,
-            ),
-            Image.asset(
-              'assets/images/illu.png',
-              width: 400,
-              height: 300,
-            ),
-            ButtonWidget(
-              labelColor: primary,
-              color: Colors.white,
-              label: 'Login',
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const LoginScreen()));
-              },
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            ButtonWidget(
-              labelColor: primary,
-              color: Colors.white,
-              label: 'Signup',
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const SignupScreen()));
-              },
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-          ],
+            child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Image.asset(
+                'assets/images/logo.png',
+                height: 200,
+              ),
+              TextBold(
+                text: 'Get Started by creating an',
+                fontSize: 18,
+                color: Colors.white,
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              TextBold(
+                text: 'account or loggin into an',
+                fontSize: 18,
+                color: Colors.white,
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              TextBold(
+                text: 'existing one.',
+                fontSize: 18,
+                color: Colors.white,
+              ),
+              Image.asset(
+                'assets/images/illu.png',
+                width: 400,
+                height: 300,
+              ),
+              ButtonWidget(
+                labelColor: primary,
+                color: Colors.white,
+                label: 'Login',
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const LoginScreen()));
+                },
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              ButtonWidget(
+                labelColor: primary,
+                color: Colors.white,
+                label: 'Signup',
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const SignupScreen()));
+                },
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+            ],
+          ),
         )),
       ),
     );
