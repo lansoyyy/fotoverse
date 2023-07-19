@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fotoverse/utils/colors.dart';
+import 'package:fotoverse/widgets/drawer_widget.dart';
 import 'package:fotoverse/widgets/text_widget.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -8,6 +9,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: const DrawerWidget(),
       floatingActionButton: FloatingActionButton(
           backgroundColor: red,
           child: const Icon(
@@ -33,13 +35,17 @@ class HomeScreen extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.menu,
-                        color: Colors.white,
-                      ),
-                    ),
+                    Builder(builder: (context) {
+                      return IconButton(
+                        onPressed: () {
+                          Scaffold.of(context).openDrawer();
+                        },
+                        icon: const Icon(
+                          Icons.menu,
+                          color: Colors.white,
+                        ),
+                      );
+                    }),
                     const SizedBox(
                       width: 10,
                     ),
@@ -91,6 +97,44 @@ class HomeScreen extends StatelessWidget {
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.fromLTRB(15, 10, 15, 10),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      const CircleAvatar(
+                                        minRadius: 20,
+                                        maxRadius: 20,
+                                        backgroundImage: AssetImage(
+                                          'assets/images/profile.png',
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      TextBold(
+                                        text: 'John Doe',
+                                        fontSize: 12,
+                                        color: primary,
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  Container(
+                                    height: 100,
+                                    width: double.infinity,
+                                    decoration: const BoxDecoration(
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         );
