@@ -17,7 +17,7 @@ class AddImageScreen extends StatefulWidget {
 
 class _AddImageScreenState extends State<AddImageScreen> {
   late File _image;
-  late List _results;
+  List _results = [];
   bool imageSelect = false;
   @override
   void initState() {
@@ -51,6 +51,7 @@ class _AddImageScreenState extends State<AddImageScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print(_results);
     return Scaffold(
       body: Container(
         height: double.infinity,
