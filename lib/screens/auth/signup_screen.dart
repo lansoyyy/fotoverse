@@ -8,7 +8,9 @@ import '../../utils/colors.dart';
 import '../../widgets/button_widget.dart';
 
 class SignupScreen extends StatefulWidget {
-  const SignupScreen({super.key});
+  const SignupScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<SignupScreen> createState() => _SignupScreenState();

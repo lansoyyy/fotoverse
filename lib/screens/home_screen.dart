@@ -5,7 +5,9 @@ import 'package:fotoverse/widgets/drawer_widget.dart';
 import 'package:fotoverse/widgets/text_widget.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

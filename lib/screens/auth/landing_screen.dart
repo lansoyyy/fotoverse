@@ -7,7 +7,9 @@ import 'package:fotoverse/widgets/text_widget.dart';
 import '../../widgets/button_widget.dart';
 
 class LandingScreen extends StatelessWidget {
-  const LandingScreen({super.key});
+  const LandingScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

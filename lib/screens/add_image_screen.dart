@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import '../utils/colors.dart';
 
 class AddImageScreen extends StatelessWidget {
-  const AddImageScreen({super.key});
+  const AddImageScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

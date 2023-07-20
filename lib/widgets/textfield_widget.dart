@@ -23,7 +23,7 @@ class TextFieldWidget extends StatefulWidget {
   final bool? isRequred;
 
   TextFieldWidget({
-    super.key,
+    Key? key,
     this.hint = '',
     this.isRequred = true,
     this.fontStyle = FontStyle.italic,
@@ -42,7 +42,7 @@ class TextFieldWidget extends StatefulWidget {
     this.textCapitalization = TextCapitalization.sentences,
     this.inputType = TextInputType.text,
     this.validator, // Add validator parameter
-  });
+  }) : super(key: key);
 
   @override
   State<TextFieldWidget> createState() => _TextFieldWidgetState();

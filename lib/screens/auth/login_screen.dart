@@ -9,7 +9,9 @@ import '../../widgets/button_widget.dart';
 import 'landing_screen.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  const LoginScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();

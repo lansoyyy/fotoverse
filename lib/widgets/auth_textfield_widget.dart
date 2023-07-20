@@ -21,7 +21,7 @@ class AuthTextFieldWidget extends StatefulWidget {
   final TextCapitalization? textCapitalization;
 
   AuthTextFieldWidget({
-    super.key,
+    Key? key,
     this.hint = '',
     this.prefixIcon,
     required this.controller,
@@ -37,7 +37,7 @@ class AuthTextFieldWidget extends StatefulWidget {
     this.textCapitalization = TextCapitalization.sentences,
     this.inputType = TextInputType.text,
     this.validator, // Add validator parameter
-  });
+  }) : super(key: key);
 
   @override
   State<AuthTextFieldWidget> createState() => _AuthTextFieldWidgetState();

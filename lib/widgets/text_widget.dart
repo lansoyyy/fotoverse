@@ -6,11 +6,11 @@ class TextRegular extends StatelessWidget {
   late Color color;
 
   TextRegular({
-    super.key,
+    Key? key,
     required this.text,
     required this.fontSize,
     required this.color,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,11 +28,11 @@ class TextBold extends StatelessWidget {
   late Color color;
 
   TextBold({
-    super.key,
+    Key? key,
     required this.text,
     required this.fontSize,
     required this.color,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

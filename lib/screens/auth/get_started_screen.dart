@@ -5,7 +5,9 @@ import 'package:fotoverse/widgets/button_widget.dart';
 import 'package:fotoverse/widgets/text_widget.dart';
 
 class GetStartedScreen extends StatelessWidget {
-  const GetStartedScreen({super.key});
+  const GetStartedScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
