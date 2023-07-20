@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:fotoverse/widgets/text_widget.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tflite/tflite.dart';
 
@@ -47,6 +48,50 @@ class _AddImageScreenState extends State<AddImageScreen> {
       _image = image;
       imageSelect = true;
     });
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: TextBold(text: 'Results:', fontSize: 14, color: Colors.black),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                for (int i = 0; i < _results.length; i++)
+                  ListTile(
+                    title: TextRegular(
+                        text: 'Label: ${_results[i]['label']}',
+                        fontSize: 14,
+                        color: Colors.black),
+                    subtitle: TextRegular(
+                        text:
+                            'Confidence: ${_results[i]['confidence'].toString()}',
+                        fontSize: 12,
+                        color: Colors.black),
+                    trailing: const Icon(
+                      Icons.check_circle_outline_rounded,
+                      color: Colors.green,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: TextBold(
+                text: 'Close',
+                fontSize: 14,
+                color: Colors.red,
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
