@@ -131,7 +131,7 @@ class HomeScreen extends StatelessWidget {
                                     height: 10,
                                   ),
                                   Container(
-                                    height: 100,
+                                    height: 95,
                                     width: double.infinity,
                                     decoration: const BoxDecoration(
                                       color: Colors.grey,
