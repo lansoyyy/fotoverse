@@ -1,11 +1,53 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:tflite/tflite.dart';
 
 import '../utils/colors.dart';
 
-class AddImageScreen extends StatelessWidget {
+class AddImageScreen extends StatefulWidget {
   const AddImageScreen({
     Key? key,
   }) : super(key: key);
+
+  @override
+  State<AddImageScreen> createState() => _AddImageScreenState();
+}
+
+class _AddImageScreenState extends State<AddImageScreen> {
+  late File _image;
+  late List _results;
+  bool imageSelect = false;
+  @override
+  void initState() {
+    super.initState();
+    loadModel();
+  }
+
+  Future loadModel() async {
+    Tflite.close();
+    String res;
+    res = (await Tflite.loadModel(
+        model: "assets/model/model.tflite",
+        labels: "assets/model/labels.txt"))!;
+    print("Models loading status: $res");
+  }
+
+  Future imageClassification(File image) async {
+    final List? recognitions = await Tflite.runModelOnImage(
+      path: image.path,
+      numResults: 6,
+      threshold: 0.05,
+      imageMean: 127.5,
+      imageStd: 127.5,
+    );
+    setState(() {
+      _results = recognitions!;
+      _image = image;
+      imageSelect = true;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +75,7 @@ class AddImageScreen extends StatelessWidget {
               height: 100,
             ),
             GestureDetector(
-              onTap: () {},
+              onTap: pickImage,
               child: Center(
                 child: Container(
                   height: 300,
@@ -54,5 +96,14 @@ class AddImageScreen extends StatelessWidget {
         )),
       ),
     );
+  }
+
+  Future pickImage() async {
+    final ImagePicker _picker = ImagePicker();
+    final XFile? pickedFile = await _picker.pickImage(
+      source: ImageSource.gallery,
+    );
+    File image = File(pickedFile!.path);
+    imageClassification(image);
   }
 }
