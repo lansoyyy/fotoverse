@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fotoverse/screens/add_image_screen.dart';
+import 'package:fotoverse/screens/pages/profile_page.dart';
 import 'package:fotoverse/utils/colors.dart';
 import 'package:fotoverse/widgets/drawer_widget.dart';
 import 'package:fotoverse/widgets/text_widget.dart';
@@ -65,11 +66,17 @@ class HomeScreen extends StatelessWidget {
                         width: 10,
                       ),
                     ),
-                    const CircleAvatar(
-                      minRadius: 20,
-                      maxRadius: 20,
-                      backgroundImage: AssetImage(
-                        'assets/images/profile.png',
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(
+                            builder: (context) => const ProfilePage()));
+                      },
+                      child: const CircleAvatar(
+                        minRadius: 20,
+                        maxRadius: 20,
+                        backgroundImage: AssetImage(
+                          'assets/images/profile.png',
+                        ),
                       ),
                     ),
                   ],
