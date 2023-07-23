@@ -1,7 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:fotoverse/widgets/text_widget.dart';
+import 'package:fotoverse/screens/view_image_screen.dart';
+import 'package:fotoverse/services/api_service.dart';
+import 'package:fotoverse/widgets/toast_widget.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tflite/tflite.dart';
 
@@ -49,54 +51,29 @@ class _AddImageScreenState extends State<AddImageScreen> {
       imageSelect = true;
     });
 
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: TextBold(text: 'Results:', fontSize: 14, color: Colors.black),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                for (int i = 0; i < _results.length; i++)
-                  ListTile(
-                    title: TextRegular(
-                        text: 'Label: ${_results[i]['label']}',
-                        fontSize: 14,
-                        color: Colors.black),
-                    subtitle: TextRegular(
-                        text:
-                            'Confidence: ${_results[i]['confidence'].toString()}',
-                        fontSize: 12,
-                        color: Colors.black),
-                    trailing: const Icon(
-                      Icons.check_circle_outline_rounded,
-                      color: Colors.green,
-                    ),
-                  ),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: TextBold(
-                text: 'Close',
-                fontSize: 14,
-                color: Colors.red,
-              ),
-            ),
-          ],
-        );
-      },
-    );
+    Future quotes = ApiService().getBibleVerses(_results[1]['label']);
+
+    quotes.then((value) {
+      if (value['results'].isNotEmpty) {
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => ViewImageScreen(
+                  imageFile: _image,
+                  quotes: value['results'],
+                )));
+      } else {
+        showToast('Image not recognized! Try again...');
+      }
+    });
+
+    // Navigator.of(context).push(MaterialPageRoute(
+    //     builder: (context) => ViewImageScreen(
+    //           imageFile: _image,
+    //           quotes: quotes,
+    //         )));
   }
 
   @override
   Widget build(BuildContext context) {
-    print(_results);
     return Scaffold(
       body: Container(
         height: double.infinity,
@@ -147,7 +124,7 @@ class _AddImageScreenState extends State<AddImageScreen> {
   Future pickImage() async {
     final ImagePicker _picker = ImagePicker();
     final XFile? pickedFile = await _picker.pickImage(
-      source: ImageSource.gallery,
+      source: ImageSource.camera,
     );
     File image = File(pickedFile!.path);
     imageClassification(image);

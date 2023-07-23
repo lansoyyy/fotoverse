@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  void getBibleVerses(String keyword) async {
+  getBibleVerses(String keyword) async {
     const apiBaseUrl = "https://api.esv.org/v3/passage/search/";
     const apiKey =
         "Token ef504304dcdfb29c9f7d0949910ec0e8d4185978"; // Replace with your ESV API key
@@ -12,7 +12,7 @@ class ApiService {
       "Authorization": "Token $apiKey",
     });
 
-    print(json.decode(response.body));
+    return json.decode(response.body);
 
     // if (response.statusCode == 200) {
     //   final jsonData = json.decode(response.body);
