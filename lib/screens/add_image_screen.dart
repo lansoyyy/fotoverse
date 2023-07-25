@@ -124,7 +124,7 @@ class _AddImageScreenState extends State<AddImageScreen> {
   Future pickImage() async {
     final ImagePicker _picker = ImagePicker();
     final XFile? pickedFile = await _picker.pickImage(
-      source: ImageSource.camera,
+      source: ImageSource.gallery,
     );
     File image = File(pickedFile!.path);
     imageClassification(image);
