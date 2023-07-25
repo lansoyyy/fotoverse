@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "789177243274",
+    "project_id": "fotoverse-38ffc",
+    "storage_bucket": "fotoverse-38ffc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:789177243274:android:3228769b6f41dacc6cbf73",
+        "android_client_info": {
+          "package_name": "com.example.fotoverse"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "789177243274-r7vo1nj1fhbg75ctjslala2ha48gnore.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDK9-p0lAu8oxMG4CfXIQoJKEgoGHA1X7E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "789177243274-r7vo1nj1fhbg75ctjslala2ha48gnore.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

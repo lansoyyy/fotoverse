@@ -39,6 +39,11 @@ dependencies:
   tflite:
   image_picker:
   http:
+  firebase_core:
+  cloud_firestore:
+  firebase_storage:
+  firebase_auth:
+  get_storage:
 
 dev_dependencies:
   flutter_test:
