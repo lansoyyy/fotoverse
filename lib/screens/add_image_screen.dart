@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:fotoverse/screens/view_image_screen.dart';
 import 'package:fotoverse/services/api_service.dart';
+import 'package:fotoverse/widgets/text_widget.dart';
 import 'package:fotoverse/widgets/toast_widget.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tflite/tflite.dart';
@@ -113,6 +114,16 @@ class _AddImageScreenState extends State<AddImageScreen> {
                     size: 180,
                   ),
                 ),
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Center(
+              child: TextBold(
+                text: 'Upload a Photo',
+                fontSize: 24,
+                color: Colors.white,
               ),
             ),
           ],
