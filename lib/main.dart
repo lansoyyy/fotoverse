@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fotoverse/screens/auth/get_started_screen.dart';
+import 'package:fotoverse/screens/auth/landing_screen.dart';
+import 'package:fotoverse/screens/home_screen.dart';
 
 import 'firebase_options.dart';
 
@@ -20,8 +23,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: GetStartedScreen(),
+    return MaterialApp(
+      home: StreamBuilder<User?>(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return const HomeScreen();
+            } else {
+              return const LandingScreen();
+            }
+          }),
     );
   }
 }
