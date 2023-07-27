@@ -1,5 +1,13 @@
+import 'dart:typed_data';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:fotoverse/services/add_photo.dart';
 import 'package:fotoverse/widgets/text_widget.dart';
+import 'package:fotoverse/widgets/toast_widget.dart';
+import 'package:widgets_to_image/widgets_to_image.dart';
 
 import '../utils/colors.dart';
 
@@ -30,147 +38,219 @@ class _ViewImageScreenState extends State<ViewImageScreen> {
 
   Color textColor = Colors.white;
 
+  // WidgetsToImageController to access widget
+  WidgetsToImageController controller = WidgetsToImageController();
+// to save image bytes of widget
+  Uint8List? bytes;
+
+  String fileName = 'image_${DateTime.now().millisecondsSinceEpoch}.jpg';
+  final FirebaseStorage storage = FirebaseStorage.instance;
+
   @override
   Widget build(BuildContext context) {
+    final Stream<DocumentSnapshot> userData = FirebaseFirestore.instance
+        .collection('Users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .snapshots();
     return Scaffold(
-      body: Container(
-        height: double.infinity,
-        width: double.infinity,
-        decoration: const BoxDecoration(
-          color: primary,
-        ),
-        child: SafeArea(
-            child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  IconButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    icon: const Icon(
-                      Icons.arrow_back_ios_new_rounded,
-                      color: Colors.white,
-                    ),
-                  ),
-                  PopupMenuButton(
-                    icon: const Icon(
-                      Icons.share,
-                      color: Colors.white,
-                    ),
-                    itemBuilder: (context) {
-                      return [
-                        PopupMenuItem(
-                          child: TextButton.icon(
-                            onPressed: () {},
-                            icon: const Icon(
-                              Icons.save,
-                              color: Colors.black,
-                            ),
-                            label: TextBold(
-                              text: 'Download',
-                              fontSize: 14,
-                              color: Colors.black,
-                            ),
+      body: StreamBuilder<DocumentSnapshot>(
+          stream: userData,
+          builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+            if (!snapshot.hasData) {
+              return const Drawer();
+            } else if (snapshot.hasError) {
+              return const Center(child: Text('Something went wrong'));
+            } else if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Drawer();
+            }
+            dynamic data = snapshot.data;
+            return Container(
+              height: double.infinity,
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                color: primary,
+              ),
+              child: SafeArea(
+                  child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        IconButton(
+                          onPressed: () async {
+                            Navigator.pop(context);
+                          },
+                          icon: const Icon(
+                            Icons.arrow_back_ios_new_rounded,
+                            color: Colors.white,
                           ),
                         ),
-                        PopupMenuItem(
-                          child: TextButton.icon(
-                            onPressed: () {},
-                            icon: Image.asset(
-                              'assets/images/logo.png',
-                              height: 30,
-                            ),
-                            label: TextBold(
-                              text: 'Showcase',
-                              fontSize: 14,
-                              color: Colors.black,
-                            ),
+                        PopupMenuButton(
+                          icon: const Icon(
+                            Icons.share,
+                            color: Colors.white,
                           ),
+                          itemBuilder: (context) {
+                            return [
+                              PopupMenuItem(
+                                child: TextButton.icon(
+                                  onPressed: () {},
+                                  icon: const Icon(
+                                    Icons.save,
+                                    color: Colors.black,
+                                  ),
+                                  label: TextBold(
+                                    text: 'Download',
+                                    fontSize: 14,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                              PopupMenuItem(
+                                child: TextButton.icon(
+                                  onPressed: () async {
+                                    bytes = await controller.capture();
+
+                                    setState(() {});
+
+                                    ByteData byteData =
+                                        ByteData.view(bytes!.buffer);
+
+                                    final Reference ref =
+                                        storage.ref().child(fileName);
+
+                                    UploadTask uploadTask = ref.putData(
+                                      byteData.buffer.asUint8List(),
+                                      SettableMetadata(
+                                          contentType:
+                                              'image/jpeg'), // Set the content type as per your image format
+                                    );
+
+                                    // Monitor the upload progress if needed
+                                    uploadTask.snapshotEvents
+                                        .listen((TaskSnapshot snapshot) {
+                                      print(
+                                          'Upload progress: ${snapshot.bytesTransferred}/${snapshot.totalBytes}');
+                                    });
+
+                                    // Await for the upload to complete
+                                    try {
+                                      await uploadTask.whenComplete(() {
+                                        showToast('Photo added to collection!');
+                                      });
+
+                                      // Get the download URL for the uploaded image
+                                      String downloadURL =
+                                          await ref.getDownloadURL();
+
+                                      addPhoto(
+                                          data['name'],
+                                          FirebaseAuth
+                                              .instance.currentUser!.uid,
+                                          downloadURL);
+                                      print('Download URL: $downloadURL');
+                                    } catch (e) {
+                                      print('Error uploading image: $e');
+                                    }
+                                  },
+                                  icon: Image.asset(
+                                    'assets/images/logo.png',
+                                    height: 30,
+                                  ),
+                                  label: TextBold(
+                                    text: 'Showcase',
+                                    fontSize: 14,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              )
+                            ];
+                          },
                         )
-                      ];
-                    },
-                  )
-                ],
-              ),
-              Stack(
-                children: [
-                  Container(
-                    width: 400,
-                    height: 400,
-                    decoration: BoxDecoration(
-                      color: primary,
-                      image: DecorationImage(
-                          image: FileImage(widget.imageFile),
-                          fit: BoxFit.fitWidth,
-                          opacity: 0.5),
+                      ],
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 150, 20, 50),
-                    child: Center(
-                      child: TextBold(
-                        text: caption,
-                        fontSize: MediaQuery.of(context).size.width / 17.5,
-                        color: textColor,
+                    WidgetsToImage(
+                      controller: controller,
+                      child: Stack(
+                        children: [
+                          Container(
+                            width: 400,
+                            height: 400,
+                            decoration: BoxDecoration(
+                              color: primary,
+                              image: DecorationImage(
+                                  image: FileImage(widget.imageFile),
+                                  fit: BoxFit.fitWidth,
+                                  opacity: 0.5),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(20, 150, 20, 50),
+                            child: Center(
+                              child: TextBold(
+                                text: caption,
+                                fontSize:
+                                    MediaQuery.of(context).size.width / 17.5,
+                                color: textColor,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 50,
-              ),
-              SizedBox(
-                height: 150,
-                width: 500,
-                child: ListView.builder(
-                  itemCount: widget.quotes.length,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.only(left: 20, right: 20),
-                      child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            caption = widget.quotes[index]['content'];
-                          });
+                    const SizedBox(
+                      height: 50,
+                    ),
+                    SizedBox(
+                      height: 150,
+                      width: 500,
+                      child: ListView.builder(
+                        itemCount: widget.quotes.length,
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.only(left: 20, right: 20),
+                            child: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  caption = widget.quotes[index]['content'];
+                                });
+                              },
+                              child: TextBold(
+                                text: widget.quotes[index]['reference'],
+                                fontSize: 18,
+                                color: Colors.white,
+                              ),
+                            ),
+                          );
                         },
-                        child: TextBold(
-                          text: widget.quotes[index]['reference'],
-                          fontSize: 18,
-                          color: Colors.white,
-                        ),
                       ),
-                    );
-                  },
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: colorsList.map((color) {
+                          return GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  textColor = color;
+                                });
+                              },
+                              child: ColorBox(color: color));
+                        }).toList(),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: colorsList.map((color) {
-                    return GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            textColor = color;
-                          });
-                        },
-                        child: ColorBox(color: color));
-                  }).toList(),
-                ),
-              ),
-            ],
-          ),
-        )),
-      ),
+              )),
+            );
+          }),
     );
   }
 }
