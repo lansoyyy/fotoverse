@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fotoverse/screens/add_image_screen.dart';
 import 'package:fotoverse/screens/pages/profile_page.dart';
@@ -95,66 +96,95 @@ class HomeScreen extends StatelessWidget {
                 const SizedBox(
                   height: 10,
                 ),
-                Expanded(
-                  child: SizedBox(
-                    child: GridView.builder(
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2),
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.all(5),
-                          child: Container(
-                            height: 350,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.fromLTRB(15, 10, 15, 10),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      const CircleAvatar(
-                                        minRadius: 20,
-                                        maxRadius: 20,
-                                        backgroundImage: AssetImage(
-                                          'assets/images/profile.png',
+                StreamBuilder<QuerySnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('Photos')
+                        .snapshots(),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if (snapshot.hasError) {
+                        print(snapshot.error);
+                        return const Center(child: Text('Error'));
+                      }
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Padding(
+                          padding: EdgeInsets.only(top: 50),
+                          child: Center(
+                              child: CircularProgressIndicator(
+                            color: Colors.black,
+                          )),
+                        );
+                      }
+
+                      final data = snapshot.requireData;
+                      return Expanded(
+                        child: SizedBox(
+                          child: GridView.builder(
+                            itemCount: data.docs.length,
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2),
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: const EdgeInsets.all(5),
+                                child: Container(
+                                  height: 350,
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        15, 10, 15, 10),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            const CircleAvatar(
+                                              minRadius: 20,
+                                              maxRadius: 20,
+                                              backgroundImage: AssetImage(
+                                                'assets/images/profile.png',
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              width: 10,
+                                            ),
+                                            TextBold(
+                                              text: data.docs[index]
+                                                  ['userName'],
+                                              fontSize: 12,
+                                              color: primary,
+                                            ),
+                                          ],
                                         ),
-                                      ),
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
-                                      TextBold(
-                                        text: 'John Doe',
-                                        fontSize: 12,
-                                        color: primary,
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  Container(
-                                    height: 95,
-                                    width: double.infinity,
-                                    decoration: const BoxDecoration(
-                                      color: Colors.grey,
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        Container(
+                                          height: 95,
+                                          width: double.infinity,
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            image: DecorationImage(
+                                                image: NetworkImage(data
+                                                    .docs[index]['imageLink']),
+                                                fit: BoxFit.cover),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                ],
-                              ),
-                            ),
+                                ),
+                              );
+                            },
                           ),
-                        );
-                      },
-                    ),
-                  ),
-                )
+                        ),
+                      );
+                    })
               ],
             ),
           ),
