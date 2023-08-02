@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:fotoverse/services/add_photo.dart';
 import 'package:fotoverse/widgets/text_widget.dart';
 import 'package:fotoverse/widgets/toast_widget.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:screenshot/screenshot.dart';
 import 'package:widgets_to_image/widgets_to_image.dart';
 
 import '../utils/colors.dart';
@@ -45,6 +47,30 @@ class _ViewImageScreenState extends State<ViewImageScreen> {
 
   String fileName = 'image_${DateTime.now().millisecondsSinceEpoch}.jpg';
   final FirebaseStorage storage = FirebaseStorage.instance;
+
+  ScreenshotController screenshotController = ScreenshotController();
+
+  void downloadImage() async {
+    try {
+      // Capture the widget as an image using the screenshotController
+      Uint8List? bytes = await screenshotController.capture();
+
+      if (bytes != null) {
+        // Save the image to the gallery or storage
+        final result = await ImageGallerySaver.saveImage(bytes);
+
+        if (result['isSuccess']) {
+          print("Image saved to gallery!");
+        } else {
+          print("Failed to save image: ${result['errorMessage']}");
+        }
+      } else {
+        print("Failed to capture the widget as an image.");
+      }
+    } catch (e) {
+      print("Error saving image: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -96,7 +122,10 @@ class _ViewImageScreenState extends State<ViewImageScreen> {
                             return [
                               PopupMenuItem(
                                 child: TextButton.icon(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    downloadImage();
+                                    downloadImage();
+                                  },
                                   icon: const Icon(
                                     Icons.save,
                                     color: Colors.black,
@@ -171,33 +200,37 @@ class _ViewImageScreenState extends State<ViewImageScreen> {
                         )
                       ],
                     ),
-                    WidgetsToImage(
-                      controller: controller,
-                      child: Stack(
-                        children: [
-                          Container(
-                            width: 400,
-                            height: 400,
-                            decoration: BoxDecoration(
-                              color: primary,
-                              image: DecorationImage(
-                                  image: FileImage(widget.imageFile),
-                                  fit: BoxFit.fitWidth,
-                                  opacity: 0.5),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(20, 150, 20, 50),
-                            child: Center(
-                              child: TextBold(
-                                text: caption,
-                                fontSize:
-                                    MediaQuery.of(context).size.width / 17.5,
-                                color: textColor,
+                    Screenshot(
+                      controller: screenshotController,
+                      child: WidgetsToImage(
+                        controller: controller,
+                        child: Stack(
+                          children: [
+                            Container(
+                              width: 400,
+                              height: 400,
+                              decoration: BoxDecoration(
+                                color: primary,
+                                image: DecorationImage(
+                                    image: FileImage(widget.imageFile),
+                                    fit: BoxFit.fitWidth,
+                                    opacity: 0.5),
                               ),
                             ),
-                          ),
-                        ],
+                            Padding(
+                              padding:
+                                  const EdgeInsets.fromLTRB(20, 150, 20, 50),
+                              child: Center(
+                                child: TextBold(
+                                  text: caption,
+                                  fontSize:
+                                      MediaQuery.of(context).size.width / 17.5,
+                                  color: textColor,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     const SizedBox(

@@ -45,6 +45,8 @@ dependencies:
   firebase_auth:
   get_storage:
   widgets_to_image:
+  image_gallery_saver:
+  screenshot: ^1.1.0
 
 dev_dependencies:
   flutter_test:
