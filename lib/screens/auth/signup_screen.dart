@@ -6,6 +6,7 @@ import 'package:fotoverse/screens/home_screen.dart';
 import 'package:fotoverse/services/signup.dart';
 import 'package:fotoverse/widgets/text_widget.dart';
 import 'package:fotoverse/widgets/textfield_widget.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../utils/colors.dart';
 import '../../widgets/button_widget.dart';
@@ -176,32 +177,32 @@ class _SignupScreenState extends State<SignupScreen> {
                 const SizedBox(
                   height: 20,
                 ),
-                MaterialButton(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5)),
-                  minWidth: 300,
-                  height: 50,
-                  color: Colors.white,
-                  onPressed: () {},
-                  child: SizedBox(
-                    width: 275,
-                    child: Row(
-                      children: [
-                        Image.asset(
-                          'assets/images/fblogo.png',
-                          height: 25,
-                        ),
-                        const SizedBox(
-                          width: 55,
-                        ),
-                        TextBold(
-                            text: 'Signup with Facebook',
-                            fontSize: 14,
-                            color: primary),
-                      ],
-                    ),
-                  ),
-                ),
+                // MaterialButton(
+                //   shape: RoundedRectangleBorder(
+                //       borderRadius: BorderRadius.circular(5)),
+                //   minWidth: 300,
+                //   height: 50,
+                //   color: Colors.white,
+                //   onPressed: () {},
+                //   child: SizedBox(
+                //     width: 275,
+                //     child: Row(
+                //       children: [
+                //         Image.asset(
+                //           'assets/images/fblogo.png',
+                //           height: 25,
+                //         ),
+                //         const SizedBox(
+                //           width: 55,
+                //         ),
+                //         TextBold(
+                //             text: 'Signup with Facebook',
+                //             fontSize: 14,
+                //             color: primary),
+                //       ],
+                //     ),
+                //   ),
+                // ),
                 const SizedBox(
                   height: 20,
                 ),
@@ -211,7 +212,9 @@ class _SignupScreenState extends State<SignupScreen> {
                   minWidth: 300,
                   height: 50,
                   color: red,
-                  onPressed: () {},
+                  onPressed: () {
+                    googleLogin();
+                  },
                   child: SizedBox(
                     width: 275,
                     child: Row(
@@ -305,6 +308,32 @@ class _SignupScreenState extends State<SignupScreen> {
       }
     } on Exception catch (e) {
       showToast("An error occurred: $e");
+    }
+  }
+
+  googleLogin() async {
+    final GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email']);
+
+    try {
+      final googleSignInAccount = await _googleSignIn.signIn();
+
+      if (googleSignInAccount == null) {
+        return;
+      }
+      final googleSignInAuth = await googleSignInAccount.authentication;
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleSignInAuth.accessToken,
+        idToken: googleSignInAuth.idToken,
+      );
+
+      signup(
+          googleSignInAccount.displayName, 'Male', googleSignInAccount.email);
+      await FirebaseAuth.instance.signInWithCredential(credential);
+
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const HomeScreen()));
+    } on FirebaseAuthException catch (e) {
+      print(e);
     }
   }
 }
