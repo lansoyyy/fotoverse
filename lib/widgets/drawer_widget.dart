@@ -6,6 +6,7 @@ import 'package:fotoverse/screens/home_screen.dart';
 import 'package:fotoverse/screens/pages/aboutus_page.dart';
 import 'package:fotoverse/screens/pages/my_creations_page.dart';
 import 'package:fotoverse/screens/pages/profile_page.dart';
+import 'package:fotoverse/screens/pages/searchverse_page.dart';
 import 'package:fotoverse/utils/colors.dart';
 import 'package:fotoverse/widgets/text_widget.dart';
 
@@ -94,6 +95,17 @@ class _MyDrawerState extends State<DrawerWidget> {
                     onTap: () {
                       Navigator.of(context).pushReplacement(MaterialPageRoute(
                           builder: (context) => const MyCreationsPage()));
+                    },
+                  ),
+                  ListTile(
+                    title: TextBold(
+                      text: 'Search Verse',
+                      fontSize: 12,
+                      color: Colors.black,
+                    ),
+                    onTap: () {
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                          builder: (context) => const SearchPage()));
                     },
                   ),
                   ListTile(
