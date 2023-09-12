@@ -52,7 +52,7 @@ class _AddImageScreenState extends State<AddImageScreen> {
       imageSelect = true;
     });
 
-    Future quotes = ApiService().getBibleVerses(_results[1]['label']);
+    Future quotes = ApiService().getBibleVerses(_results[0]['label']);
 
     quotes.then((value) {
       if (value['results'].isNotEmpty) {
