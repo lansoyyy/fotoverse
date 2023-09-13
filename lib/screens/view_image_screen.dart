@@ -238,9 +238,7 @@ class _ViewImageScreenState extends State<ViewImageScreen> {
                                 fontFamily: 'Regular',
                                 fontSize: 14),
                             onChanged: (value) {
-                              setState(() {
-                                nameSearched = value;
-                              });
+                              nameSearched = value;
 
                               getVerses(nameSearched);
                             },
