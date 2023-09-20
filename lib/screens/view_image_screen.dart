@@ -51,6 +51,7 @@ class _ViewImageScreenState extends State<ViewImageScreen> {
 
   ScreenshotController screenshotController = ScreenshotController();
 
+  double fontSize = 14;
   void downloadImage() async {
     try {
       // Capture the widget as an image using the screenshotController
@@ -280,8 +281,7 @@ class _ViewImageScreenState extends State<ViewImageScreen> {
                               child: Center(
                                 child: TextBold(
                                   text: caption,
-                                  fontSize:
-                                      MediaQuery.of(context).size.width / 17.5,
+                                  fontSize: fontSize,
                                   color: textColor,
                                 ),
                               ),
@@ -323,6 +323,45 @@ class _ViewImageScreenState extends State<ViewImageScreen> {
                           );
                         },
                       ),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            if (fontSize > 1) {
+                              setState(() {
+                                fontSize--;
+                              });
+                            }
+                          },
+                          icon: const Icon(
+                            Icons.remove,
+                            color: Colors.white,
+                            size: 28,
+                          ),
+                        ),
+                        TextBold(
+                          text: fontSize.toStringAsFixed(0),
+                          fontSize: fontSize,
+                          color: Colors.white,
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            setState(() {
+                              fontSize++;
+                            });
+                          },
+                          icon: const Icon(
+                            Icons.add,
+                            color: Colors.white,
+                            size: 28,
+                          ),
+                        ),
+                      ],
                     ),
                     const SizedBox(
                       height: 20,

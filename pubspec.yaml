@@ -48,6 +48,7 @@ dependencies:
   image_gallery_saver:
   screenshot:
   google_sign_in:
+  image_cropper:
 
 dev_dependencies:
   flutter_test:

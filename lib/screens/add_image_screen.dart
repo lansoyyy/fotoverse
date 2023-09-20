@@ -5,9 +5,9 @@ import 'package:fotoverse/screens/view_image_screen.dart';
 import 'package:fotoverse/services/api_service.dart';
 import 'package:fotoverse/widgets/text_widget.dart';
 import 'package:fotoverse/widgets/toast_widget.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tflite/tflite.dart';
-
 import '../utils/colors.dart';
 
 class AddImageScreen extends StatefulWidget {
@@ -138,6 +138,32 @@ class _AddImageScreenState extends State<AddImageScreen> {
       source: ImageSource.gallery,
     );
     File image = File(pickedFile!.path);
-    imageClassification(image);
+
+    CroppedFile? croppedFile = await ImageCropper().cropImage(
+      sourcePath: image.path,
+      aspectRatioPresets: [
+        CropAspectRatioPreset.square,
+        CropAspectRatioPreset.ratio3x2,
+        CropAspectRatioPreset.original,
+        CropAspectRatioPreset.ratio4x3,
+        CropAspectRatioPreset.ratio16x9
+      ],
+      uiSettings: [
+        AndroidUiSettings(
+            toolbarTitle: 'Cropper',
+            toolbarColor: Colors.deepOrange,
+            toolbarWidgetColor: Colors.white,
+            initAspectRatio: CropAspectRatioPreset.original,
+            lockAspectRatio: false),
+        IOSUiSettings(
+          title: 'Cropper',
+        ),
+        WebUiSettings(
+          context: context,
+        ),
+      ],
+    );
+
+    imageClassification(File(croppedFile!.path));
   }
 }
