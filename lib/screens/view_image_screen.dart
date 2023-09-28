@@ -11,6 +11,7 @@ import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:widgets_to_image/widgets_to_image.dart';
 
+import '../services/api_service.dart';
 import '../utils/colors.dart';
 
 class ViewImageScreen extends StatefulWidget {
@@ -50,6 +51,7 @@ class _ViewImageScreenState extends State<ViewImageScreen> {
 
   ScreenshotController screenshotController = ScreenshotController();
 
+  double fontSize = 14;
   void downloadImage() async {
     try {
       // Capture the widget as an image using the screenshotController
@@ -70,6 +72,24 @@ class _ViewImageScreenState extends State<ViewImageScreen> {
     } catch (e) {
       print("Error saving image: $e");
     }
+  }
+
+  final searchController = TextEditingController();
+  String nameSearched = '';
+
+  List verses = [];
+
+  getVerses(String search) {
+    verses.clear();
+    Future quotes = ApiService().getBibleVerses(search);
+
+    quotes.then((value) {
+      if (value['results'].isNotEmpty) {
+        setState(() {
+          verses = value['results'];
+        });
+      }
+    });
   }
 
   @override
@@ -200,6 +220,44 @@ class _ViewImageScreenState extends State<ViewImageScreen> {
                         )
                       ],
                     ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20, right: 20),
+                      child: Container(
+                        height: 40,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(
+                              color: primary,
+                            ),
+                            borderRadius: BorderRadius.circular(100)),
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 10, right: 10),
+                          child: TextFormField(
+                            style: const TextStyle(
+                                color: Colors.black,
+                                fontFamily: 'Regular',
+                                fontSize: 14),
+                            onChanged: (value) {
+                              nameSearched = value;
+
+                              getVerses(nameSearched);
+                            },
+                            decoration: const InputDecoration(
+                                labelStyle: TextStyle(
+                                  color: primary,
+                                ),
+                                hintText: 'Search a keyword',
+                                hintStyle: TextStyle(fontFamily: 'QRegular'),
+                                suffixIcon: Icon(
+                                  Icons.search,
+                                  color: Colors.grey,
+                                )),
+                            controller: searchController,
+                          ),
+                        ),
+                      ),
+                    ),
                     Screenshot(
                       controller: screenshotController,
                       child: WidgetsToImage(
@@ -223,8 +281,7 @@ class _ViewImageScreenState extends State<ViewImageScreen> {
                               child: Center(
                                 child: TextBold(
                                   text: caption,
-                                  fontSize:
-                                      MediaQuery.of(context).size.width / 17.5,
+                                  fontSize: fontSize,
                                   color: textColor,
                                 ),
                               ),
@@ -240,7 +297,9 @@ class _ViewImageScreenState extends State<ViewImageScreen> {
                       height: 150,
                       width: 500,
                       child: ListView.builder(
-                        itemCount: widget.quotes.length,
+                        itemCount: verses.isNotEmpty
+                            ? verses.length
+                            : widget.quotes.length,
                         scrollDirection: Axis.horizontal,
                         itemBuilder: (context, index) {
                           return Padding(
@@ -248,11 +307,15 @@ class _ViewImageScreenState extends State<ViewImageScreen> {
                             child: GestureDetector(
                               onTap: () {
                                 setState(() {
-                                  caption = widget.quotes[index]['content'];
+                                  caption = verses.isNotEmpty
+                                      ? verses[index]['content']
+                                      : widget.quotes[index]['content'];
                                 });
                               },
                               child: TextBold(
-                                text: widget.quotes[index]['reference'],
+                                text: verses.isNotEmpty
+                                    ? verses[index]['reference']
+                                    : widget.quotes[index]['reference'],
                                 fontSize: 18,
                                 color: Colors.white,
                               ),
@@ -260,6 +323,45 @@ class _ViewImageScreenState extends State<ViewImageScreen> {
                           );
                         },
                       ),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            if (fontSize > 1) {
+                              setState(() {
+                                fontSize--;
+                              });
+                            }
+                          },
+                          icon: const Icon(
+                            Icons.remove,
+                            color: Colors.white,
+                            size: 28,
+                          ),
+                        ),
+                        TextBold(
+                          text: fontSize.toStringAsFixed(0),
+                          fontSize: fontSize,
+                          color: Colors.white,
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            setState(() {
+                              fontSize++;
+                            });
+                          },
+                          icon: const Icon(
+                            Icons.add,
+                            color: Colors.white,
+                            size: 28,
+                          ),
+                        ),
+                      ],
                     ),
                     const SizedBox(
                       height: 20,
