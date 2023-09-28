@@ -7,10 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:fotoverse/services/add_photo.dart';
 import 'package:fotoverse/widgets/text_widget.dart';
 import 'package:fotoverse/widgets/toast_widget.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:widgets_to_image/widgets_to_image.dart';
-
+import 'package:flutter/rendering.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:typed_data';
+import 'dart:io';
 import '../services/api_service.dart';
 import '../utils/colors.dart';
 
@@ -52,25 +56,50 @@ class _ViewImageScreenState extends State<ViewImageScreen> {
   ScreenshotController screenshotController = ScreenshotController();
 
   double fontSize = 14;
+
+  final box = GetStorage();
   void downloadImage() async {
-    try {
-      // Capture the widget as an image using the screenshotController
-      Uint8List? bytes = await screenshotController.capture();
+    if (box.read('path') == null) {
+      try {
+        // Capture the widget as an image using the screenshotController
+        Uint8List? bytes = await screenshotController.capture();
 
-      if (bytes != null) {
-        // Save the image to the gallery or storage
-        final result = await ImageGallerySaver.saveImage(bytes);
+        if (bytes != null) {
+          // Save the image to the gallery or storage
+          final result = await ImageGallerySaver.saveImage(bytes);
 
-        if (result['isSuccess']) {
-          print("Image saved to gallery!");
+          if (result['isSuccess']) {
+            print("Image saved to gallery!");
+          } else {
+            print("Failed to save image: ${result['errorMessage']}");
+          }
         } else {
-          print("Failed to save image: ${result['errorMessage']}");
+          print("Failed to capture the widget as an image.");
         }
-      } else {
-        print("Failed to capture the widget as an image.");
+      } catch (e) {
+        print("Error saving image: $e");
       }
-    } catch (e) {
-      print("Error saving image: $e");
+    } else {
+      try {
+        // Capture the widget as an image using the screenshotController
+        Uint8List? bytes = await screenshotController.capture();
+
+        if (bytes != null) {
+          // Get the documents directory where you want to save the image
+          final appDocDir = await getApplicationDocumentsDirectory();
+          final imagePath = '${appDocDir.path}/my_image.png';
+
+          // Write the bytes to a File and save it to the specified location
+          final file = File(imagePath);
+          await file.writeAsBytes(bytes);
+
+          print("Image saved to $imagePath");
+        } else {
+          print("Failed to capture the widget as an image.");
+        }
+      } catch (e) {
+        print("Error saving image: $e");
+      }
     }
   }
 
