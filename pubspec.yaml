@@ -49,7 +49,7 @@ dependencies:
   screenshot:
   google_sign_in:
   image_cropper:
-  file_picker:
+  file_picker: ^4.5.1
 
 
 dev_dependencies:

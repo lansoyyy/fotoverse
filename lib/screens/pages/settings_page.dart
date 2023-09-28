@@ -3,10 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:fotoverse/utils/colors.dart';
 import 'package:fotoverse/widgets/drawer_widget.dart';
 import 'package:fotoverse/widgets/text_widget.dart';
+import 'package:get_storage/get_storage.dart';
 
-class SettingsPage extends StatelessWidget {
+class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
 
+  @override
+  State<SettingsPage> createState() => _SettingsPageState();
+}
+
+class _SettingsPageState extends State<SettingsPage> {
+  final box = GetStorage();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,6 +28,10 @@ class SettingsPage extends StatelessWidget {
           ListTile(
             onTap: () async {
               final result = await FilePicker.platform.getDirectoryPath();
+
+              setState(() {
+                box.write('path', result);
+              });
             },
             leading: const Icon(
               Icons.folder,
@@ -31,7 +42,7 @@ class SettingsPage extends StatelessWidget {
               color: primary,
             ),
             title: TextBold(
-              text: 'Location of the folder',
+              text: box.read('path') ?? 'Select a location',
               fontSize: 18,
               color: primary,
             ),

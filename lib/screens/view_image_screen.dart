@@ -86,8 +86,8 @@ class _ViewImageScreenState extends State<ViewImageScreen> {
 
         if (bytes != null) {
           // Get the documents directory where you want to save the image
-          final appDocDir = await getApplicationDocumentsDirectory();
-          final imagePath = '${appDocDir.path}/my_image.png';
+
+          final imagePath = '${box.read('path')}/my_image.png';
 
           // Write the bytes to a File and save it to the specified location
           final file = File(imagePath);
