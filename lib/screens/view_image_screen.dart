@@ -11,9 +11,6 @@ import 'package:get_storage/get_storage.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:widgets_to_image/widgets_to_image.dart';
-import 'package:flutter/rendering.dart';
-import 'package:path_provider/path_provider.dart';
-import 'dart:typed_data';
 import 'dart:io';
 import '../services/api_service.dart';
 import '../utils/colors.dart';
@@ -319,11 +316,8 @@ class _ViewImageScreenState extends State<ViewImageScreen> {
                         ),
                       ),
                     ),
-                    const SizedBox(
-                      height: 50,
-                    ),
                     SizedBox(
-                      height: 150,
+                      height: 50,
                       width: 500,
                       child: ListView.builder(
                         itemCount: verses.isNotEmpty
@@ -352,9 +346,6 @@ class _ViewImageScreenState extends State<ViewImageScreen> {
                           );
                         },
                       ),
-                    ),
-                    const SizedBox(
-                      height: 20,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -392,9 +383,6 @@ class _ViewImageScreenState extends State<ViewImageScreen> {
                         ),
                       ],
                     ),
-                    const SizedBox(
-                      height: 20,
-                    ),
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: Row(
@@ -408,6 +396,80 @@ class _ViewImageScreenState extends State<ViewImageScreen> {
                               },
                               child: ColorBox(color: color));
                         }).toList(),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(5, 20, 5, 10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          TextBold(
+                            text: 'Recommended for you',
+                            fontSize: 18,
+                            color: Colors.white,
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          SizedBox(
+                            height: 300,
+                            child: GridView.builder(
+                              itemCount: verses.isNotEmpty
+                                  ? verses.length
+                                  : widget.quotes.length,
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2),
+                              itemBuilder: (context, index) {
+                                final reversedIndex = verses.isNotEmpty
+                                    ? verses.length - 1 - index
+                                    : widget.quotes.length - 1 - index;
+
+                                // Assuming you want to display some data from your 'verses' or 'widget.quotes' list
+                                final itemData = verses.isNotEmpty
+                                    ? verses[reversedIndex]
+                                    : widget.quotes[reversedIndex];
+                                return GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      caption = itemData['content'];
+                                    });
+                                  },
+                                  child: Card(
+                                    child: Stack(
+                                      children: [
+                                        Container(
+                                          width: 400,
+                                          height: 400,
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            image: DecorationImage(
+                                              image:
+                                                  FileImage(widget.imageFile),
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              10, 0, 10, 0),
+                                          child: Center(
+                                            child: TextBold(
+                                              text: itemData['content'],
+                                              fontSize: 12,
+                                              color: textColor,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
