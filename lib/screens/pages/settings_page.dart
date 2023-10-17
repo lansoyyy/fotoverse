@@ -52,6 +52,22 @@ class _SettingsPageState extends State<SettingsPage> {
               color: Colors.grey,
             ),
           ),
+          ListTile(
+            onTap: () async {},
+            leading: const Icon(
+              Icons.feedback,
+              color: primary,
+            ),
+            trailing: const Icon(
+              Icons.arrow_forward_ios_rounded,
+              color: primary,
+            ),
+            title: TextBold(
+              text: 'Send a Feedback',
+              fontSize: 18,
+              color: primary,
+            ),
+          ),
         ],
       ),
     );
