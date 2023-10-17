@@ -50,6 +50,7 @@ dependencies:
   google_sign_in:
   image_cropper:
   file_picker: ^4.5.1
+  url_launcher:
 
 
 dev_dependencies:

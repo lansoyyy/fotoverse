@@ -1,5 +1,6 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:fotoverse/screens/pages/feedback_page.dart';
 import 'package:fotoverse/utils/colors.dart';
 import 'package:fotoverse/widgets/drawer_widget.dart';
 import 'package:fotoverse/widgets/text_widget.dart';
@@ -53,7 +54,10 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
           ),
           ListTile(
-            onTap: () async {},
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const FeedbackPage()));
+            },
             leading: const Icon(
               Icons.feedback,
               color: primary,

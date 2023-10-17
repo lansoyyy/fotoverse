@@ -12,6 +12,7 @@ class TextFieldWidget extends StatefulWidget {
   final TextInputType? inputType;
   late bool? showEye;
   late Color? color;
+  late Color? textcolor;
   late Color? borderColor;
   late Color? hintColor;
   late double? radius;
@@ -34,6 +35,7 @@ class TextFieldWidget extends StatefulWidget {
     this.width = 325,
     this.height = 60,
     this.maxLine = 1,
+    this.textcolor = Colors.white,
     this.hintColor = Colors.white,
     this.borderColor = Colors.grey,
     this.showEye = false,
@@ -59,10 +61,10 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
             children: [
               TextSpan(
                 text: widget.label,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 14,
                   fontFamily: 'Bold',
-                  color: Colors.white,
+                  color: widget.textcolor,
                   fontWeight: FontWeight.bold,
                 ),
               ),
