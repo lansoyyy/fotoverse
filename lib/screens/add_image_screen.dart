@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:fotoverse/screens/view_image_screen.dart';
+import 'package:fotoverse/screens/first_view_image_screen.dart';
 import 'package:fotoverse/services/api_service.dart';
 import 'package:fotoverse/widgets/text_widget.dart';
 import 'package:fotoverse/widgets/toast_widget.dart';
@@ -54,10 +54,12 @@ class _AddImageScreenState extends State<AddImageScreen> {
 
     Future quotes = ApiService().getBibleVerses(_results[0]['label']);
 
+    // Future quotes = ApiService().getBibleVerses('peace');
+
     quotes.then((value) {
       if (value['results'].isNotEmpty) {
         Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => ViewImageScreen(
+            builder: (context) => FirstViewImageScreen(
                   imageFile: _image,
                   quotes: value['results'],
                 )));

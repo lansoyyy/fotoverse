@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:fotoverse/screens/view_image_screen.dart';
 import 'package:fotoverse/services/add_photo.dart';
 import 'package:fotoverse/widgets/text_widget.dart';
 import 'package:fotoverse/widgets/toast_widget.dart';
@@ -15,19 +16,19 @@ import 'dart:io';
 import '../services/api_service.dart';
 import '../utils/colors.dart';
 
-class ViewImageScreen extends StatefulWidget {
+class FirstViewImageScreen extends StatefulWidget {
   final List quotes;
   final dynamic imageFile;
 
-  const ViewImageScreen(
+  const FirstViewImageScreen(
       {Key? key, required this.quotes, required this.imageFile})
       : super(key: key);
 
   @override
-  State<ViewImageScreen> createState() => _ViewImageScreenState();
+  State<FirstViewImageScreen> createState() => _FirstViewImageScreenState();
 }
 
-class _ViewImageScreenState extends State<ViewImageScreen> {
+class _FirstViewImageScreenState extends State<FirstViewImageScreen> {
   final List<Color> colorsList = [
     Colors.white,
     Colors.black,
@@ -169,6 +170,35 @@ class _ViewImageScreenState extends State<ViewImageScreen> {
                               PopupMenuItem(
                                 child: TextButton.icon(
                                   onPressed: () {
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ViewImageScreen(
+                                                    quotes: widget.quotes,
+                                                    imageFile:
+                                                        widget.imageFile)));
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ViewImageScreen(
+                                                    quotes: widget.quotes,
+                                                    imageFile:
+                                                        widget.imageFile)));
+                                  },
+                                  icon: const Icon(
+                                    Icons.edit,
+                                    color: Colors.black,
+                                  ),
+                                  label: TextBold(
+                                    text: 'Edit',
+                                    fontSize: 14,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                              PopupMenuItem(
+                                child: TextButton.icon(
+                                  onPressed: () {
                                     downloadImage();
                                     downloadImage();
                                   },
@@ -246,44 +276,6 @@ class _ViewImageScreenState extends State<ViewImageScreen> {
                         )
                       ],
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 20, right: 20),
-                      child: Container(
-                        height: 40,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(
-                              color: primary,
-                            ),
-                            borderRadius: BorderRadius.circular(100)),
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 10, right: 10),
-                          child: TextFormField(
-                            style: const TextStyle(
-                                color: Colors.black,
-                                fontFamily: 'Regular',
-                                fontSize: 14),
-                            onChanged: (value) {
-                              nameSearched = value;
-
-                              getVerses(nameSearched);
-                            },
-                            decoration: const InputDecoration(
-                                labelStyle: TextStyle(
-                                  color: primary,
-                                ),
-                                hintText: 'Search a keyword',
-                                hintStyle: TextStyle(fontFamily: 'QRegular'),
-                                suffixIcon: Icon(
-                                  Icons.search,
-                                  color: Colors.grey,
-                                )),
-                            controller: searchController,
-                          ),
-                        ),
-                      ),
-                    ),
                     Screenshot(
                       controller: screenshotController,
                       child: WidgetsToImage(
@@ -314,37 +306,6 @@ class _ViewImageScreenState extends State<ViewImageScreen> {
                             ),
                           ],
                         ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 50,
-                      width: 500,
-                      child: ListView.builder(
-                        itemCount: verses.isNotEmpty
-                            ? verses.length
-                            : widget.quotes.length,
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.only(left: 20, right: 20),
-                            child: GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  caption = verses.isNotEmpty
-                                      ? verses[index]['content']
-                                      : widget.quotes[index]['content'];
-                                });
-                              },
-                              child: TextBold(
-                                text: verses.isNotEmpty
-                                    ? verses[index]['reference']
-                                    : widget.quotes[index]['reference'],
-                                fontSize: 18,
-                                color: Colors.white,
-                              ),
-                            ),
-                          );
-                        },
                       ),
                     ),
                     Row(
@@ -396,6 +357,77 @@ class _ViewImageScreenState extends State<ViewImageScreen> {
                               },
                               child: ColorBox(color: color));
                         }).toList(),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(5, 20, 5, 5),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          TextBold(
+                            text: 'Recommended for you:',
+                            fontSize: 18,
+                            color: Colors.white,
+                          ),
+                          SizedBox(
+                            height: 300,
+                            child: GridView.builder(
+                              itemCount: verses.isNotEmpty
+                                  ? verses.length
+                                  : widget.quotes.length,
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2),
+                              itemBuilder: (context, index) {
+                                final reversedIndex = verses.isNotEmpty
+                                    ? verses.length - 1 - index
+                                    : widget.quotes.length - 1 - index;
+
+                                // Assuming you want to display some data from your 'verses' or 'widget.quotes' list
+                                final itemData = verses.isNotEmpty
+                                    ? verses[reversedIndex]
+                                    : widget.quotes[reversedIndex];
+                                return GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      caption = itemData['content'];
+                                    });
+                                  },
+                                  child: Card(
+                                    child: Stack(
+                                      children: [
+                                        Container(
+                                          width: 400,
+                                          height: 400,
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            image: DecorationImage(
+                                              image:
+                                                  FileImage(widget.imageFile),
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              10, 0, 10, 0),
+                                          child: Center(
+                                            child: TextBold(
+                                              text: itemData['content'],
+                                              fontSize: 12,
+                                              color: textColor,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
