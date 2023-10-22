@@ -344,20 +344,17 @@ class _FirstViewImageScreenState extends State<FirstViewImageScreen> {
                         ),
                       ],
                     ),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: colorsList.map((color) {
-                          return GestureDetector(
+                    Wrap(
+                      children: [
+                        for (int i = 0; i < colorsList.length; i++)
+                          GestureDetector(
                               onTap: () {
                                 setState(() {
-                                  textColor = color;
+                                  textColor = colorsList[i];
                                 });
                               },
-                              child: ColorBox(color: color));
-                        }).toList(),
-                      ),
+                              child: ColorBox(color: colorsList[i]))
+                      ],
                     ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(5, 20, 5, 5),
@@ -447,8 +444,8 @@ class ColorBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 100,
-      height: 100,
+      width: 50,
+      height: 50,
       color: color,
     );
   }
