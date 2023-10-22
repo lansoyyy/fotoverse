@@ -118,12 +118,16 @@ class _ViewImageScreenState extends State<ViewImageScreen> {
     });
   }
 
+  double left = 100;
+  double top = 100;
+
   @override
   Widget build(BuildContext context) {
     final Stream<DocumentSnapshot> userData = FirebaseFirestore.instance
         .collection('Users')
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .snapshots();
+
     return Scaffold(
       body: StreamBuilder<DocumentSnapshot>(
           stream: userData,
@@ -301,14 +305,62 @@ class _ViewImageScreenState extends State<ViewImageScreen> {
                                     opacity: 0.5),
                               ),
                             ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.fromLTRB(20, 150, 20, 50),
-                              child: Center(
-                                child: TextBold(
-                                  text: caption,
-                                  fontSize: fontSize,
-                                  color: textColor,
+                            Positioned(
+                              left: left,
+                              top: top,
+                              child: GestureDetector(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(0),
+                                  child: Center(
+                                    child: Draggable(
+                                      onDragEnd: (details) {
+                                        setState(() {
+                                          left = details.offset.dx;
+                                          top = details.offset.dy;
+                                        });
+                                      },
+                                      maxSimultaneousDrags: 1,
+                                      feedback: SizedBox(
+                                        width: 400,
+                                        height: 400,
+                                        child: Padding(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              20, 150, 20, 50),
+                                          child: TextBold(
+                                            text: caption,
+                                            fontSize: fontSize,
+                                            color: textColor,
+                                          ),
+                                        ),
+                                      ),
+                                      childWhenDragging: SizedBox(
+                                        width: 400,
+                                        height: 400,
+                                        child: Padding(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              20, 150, 20, 50),
+                                          child: TextBold(
+                                            text: caption,
+                                            fontSize: fontSize,
+                                            color: textColor,
+                                          ),
+                                        ),
+                                      ),
+                                      child: SizedBox(
+                                        width: 400,
+                                        height: 400,
+                                        child: Padding(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              20, 150, 20, 50),
+                                          child: TextBold(
+                                            text: caption,
+                                            fontSize: fontSize,
+                                            color: textColor,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
