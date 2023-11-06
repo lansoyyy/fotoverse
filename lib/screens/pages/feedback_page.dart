@@ -91,7 +91,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
 
                       if (await canLaunchUrlString(emailLaunchUri.toString())) {
                         await launchUrlString(
-                            emailLaunchUri.toString().replaceAll('+', ' '));
+                            emailLaunchUri.toString());
 
                         showToast('Feedback sent succesfully!');
 

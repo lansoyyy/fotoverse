@@ -323,40 +323,28 @@ class _ViewImageScreenState extends State<ViewImageScreen> {
                                       feedback: SizedBox(
                                         width: 400,
                                         height: 400,
-                                        child: Padding(
-                                          padding: const EdgeInsets.fromLTRB(
-                                              20, 150, 20, 50),
-                                          child: TextBold(
-                                            text: caption,
-                                            fontSize: fontSize,
-                                            color: textColor,
-                                          ),
+                                        child: TextBold(
+                                          text: caption,
+                                          fontSize: fontSize,
+                                          color: textColor,
                                         ),
                                       ),
                                       childWhenDragging: SizedBox(
                                         width: 400,
                                         height: 400,
-                                        child: Padding(
-                                          padding: const EdgeInsets.fromLTRB(
-                                              20, 150, 20, 50),
-                                          child: TextBold(
-                                            text: caption,
-                                            fontSize: fontSize,
-                                            color: textColor,
-                                          ),
+                                        child: TextBold(
+                                          text: caption,
+                                          fontSize: fontSize,
+                                          color: textColor,
                                         ),
                                       ),
                                       child: SizedBox(
                                         width: 400,
                                         height: 400,
-                                        child: Padding(
-                                          padding: const EdgeInsets.fromLTRB(
-                                              20, 150, 20, 50),
-                                          child: TextBold(
-                                            text: caption,
-                                            fontSize: fontSize,
-                                            color: textColor,
-                                          ),
+                                        child: TextBold(
+                                          text: caption,
+                                          fontSize: fontSize,
+                                          color: textColor,
                                         ),
                                       ),
                                     ),
