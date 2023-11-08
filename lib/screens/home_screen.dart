@@ -21,7 +21,8 @@ class HomeScreen extends StatelessWidget {
             Icons.add,
             color: Colors.white,
           ),
-          onPressed: () {
+          onPressed: () async {
+            // await FirebaseAuth.instance.signOut();
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => const AddImageScreen()));
           }),

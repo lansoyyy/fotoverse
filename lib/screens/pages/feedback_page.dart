@@ -89,18 +89,14 @@ class _FeedbackPageState extends State<FeedbackPage> {
                         },
                       );
 
-                      if (await canLaunchUrlString(emailLaunchUri.toString())) {
-                        await launchUrlString(
-                            emailLaunchUri.toString());
+                      await launchUrlString(
+                          emailLaunchUri.toString().replaceAll('+', ' '));
 
-                        showToast('Feedback sent succesfully!');
+                      showToast('Feedback sent succesfully!');
 
-                        nameController.clear();
-                        emailController.clear();
-                        commentController.clear();
-                      } else {
-                        throw 'Could not launch email';
-                      }
+                      nameController.clear();
+                      emailController.clear();
+                      commentController.clear();
                     },
                   ),
                 ],
