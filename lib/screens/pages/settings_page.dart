@@ -1,6 +1,7 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:fotoverse/screens/pages/feedback_page.dart';
+import 'package:fotoverse/screens/pages/help_page.dart';
 import 'package:fotoverse/utils/colors.dart';
 import 'package:fotoverse/widgets/drawer_widget.dart';
 import 'package:fotoverse/widgets/text_widget.dart';
@@ -68,6 +69,25 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
             title: TextBold(
               text: 'Send a Feedback',
+              fontSize: 18,
+              color: primary,
+            ),
+          ),
+          ListTile(
+            onTap: () {
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => const HelpPage()));
+            },
+            leading: const Icon(
+              Icons.help,
+              color: primary,
+            ),
+            trailing: const Icon(
+              Icons.arrow_forward_ios_rounded,
+              color: primary,
+            ),
+            title: TextBold(
+              text: 'Help',
               fontSize: 18,
               color: primary,
             ),

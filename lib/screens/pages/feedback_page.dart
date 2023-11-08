@@ -81,7 +81,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
                     onPressed: () async {
                       final Uri emailLaunchUri = Uri(
                         scheme: 'mailto',
-                        path: '2ez4ramos@gmail.com',
+                        path: 'rotfotoverse@gmail.com',
                         queryParameters: {
                           'subject': "Receipt",
                           'body':
