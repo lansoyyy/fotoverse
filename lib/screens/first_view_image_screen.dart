@@ -119,8 +119,11 @@ class _FirstViewImageScreenState extends State<FirstViewImageScreen> {
     });
   }
 
+  Alignment ali = Alignment.center;
+
   @override
   Widget build(BuildContext context) {
+    print(ali);
     final Stream<DocumentSnapshot> userData = FirebaseFirestore.instance
         .collection('Users')
         .doc(FirebaseAuth.instance.currentUser!.uid)
@@ -276,38 +279,37 @@ class _FirstViewImageScreenState extends State<FirstViewImageScreen> {
                         )
                       ],
                     ),
-                    Screenshot(
-                      controller: screenshotController,
-                      child: WidgetsToImage(
-                        controller: controller,
-                        child: Stack(
-                          children: [
-                            Container(
-                              width: 400,
-                              height: 400,
-                              decoration: BoxDecoration(
-                                color: primary,
-                                image: DecorationImage(
-                                    image: FileImage(widget.imageFile),
-                                    fit: BoxFit.fitWidth,
-                                    opacity: 0.5),
+                    StatefulBuilder(builder: (context, setState) {
+                      return Screenshot(
+                        controller: screenshotController,
+                        child: WidgetsToImage(
+                          controller: controller,
+                          child: Stack(
+                            children: [
+                              Container(
+                                width: 400,
+                                height: 400,
+                                decoration: BoxDecoration(
+                                  color: primary,
+                                  image: DecorationImage(
+                                      image: FileImage(widget.imageFile),
+                                      fit: BoxFit.fitWidth,
+                                      opacity: 0.5),
+                                ),
                               ),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.fromLTRB(20, 150, 20, 50),
-                              child: Center(
+                              Align(
+                                alignment: ali,
                                 child: TextBold(
                                   text: caption,
                                   fontSize: fontSize,
                                   color: textColor,
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    ),
+                      );
+                    }),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -388,6 +390,13 @@ class _FirstViewImageScreenState extends State<FirstViewImageScreen> {
                                 return GestureDetector(
                                   onTap: () {
                                     setState(() {
+                                      if (index % 2 == 0) {
+                                        ali = Alignment.topCenter;
+                                      } else if (index % 3 == 0) {
+                                        ali = Alignment.bottomCenter;
+                                      } else {
+                                        ali = Alignment.center;
+                                      }
                                       caption = itemData['content'];
                                     });
                                   },
@@ -406,15 +415,16 @@ class _FirstViewImageScreenState extends State<FirstViewImageScreen> {
                                             ),
                                           ),
                                         ),
-                                        Padding(
-                                          padding: const EdgeInsets.fromLTRB(
-                                              10, 0, 10, 0),
-                                          child: Center(
-                                            child: TextBold(
-                                              text: itemData['content'],
-                                              fontSize: 12,
-                                              color: textColor,
-                                            ),
+                                        Align(
+                                          alignment: index % 2 == 0
+                                              ? Alignment.topCenter
+                                              : index % 3 == 0
+                                                  ? Alignment.bottomCenter
+                                                  : Alignment.center,
+                                          child: TextBold(
+                                            text: itemData['content'],
+                                            fontSize: 10,
+                                            color: textColor,
                                           ),
                                         ),
                                       ],
