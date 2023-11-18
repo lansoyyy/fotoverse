@@ -296,13 +296,13 @@ class _FirstViewImageScreenState extends State<FirstViewImageScreen> {
                                       fit: BoxFit.fitWidth,
                                       opacity: 0.5),
                                 ),
-                              ),
-                              Align(
-                                alignment: ali,
-                                child: TextBold(
-                                  text: caption,
-                                  fontSize: fontSize,
-                                  color: textColor,
+                                child: Align(
+                                  alignment: ali,
+                                  child: TextBold(
+                                    text: caption,
+                                    fontSize: fontSize,
+                                    color: textColor,
+                                  ),
                                 ),
                               ),
                             ],
