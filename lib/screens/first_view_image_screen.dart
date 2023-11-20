@@ -41,6 +41,8 @@ class _FirstViewImageScreenState extends State<FirstViewImageScreen> {
   ];
   String caption = '';
 
+  String verse = '';
+
   Color textColor = Colors.white;
 
   // WidgetsToImageController to access widget
@@ -299,7 +301,7 @@ class _FirstViewImageScreenState extends State<FirstViewImageScreen> {
                                 child: Align(
                                   alignment: ali,
                                   child: TextBold(
-                                    text: caption,
+                                    text: '$verse: $caption',
                                     fontSize: fontSize,
                                     color: textColor,
                                   ),
@@ -397,6 +399,7 @@ class _FirstViewImageScreenState extends State<FirstViewImageScreen> {
                                       } else {
                                         ali = Alignment.center;
                                       }
+                                      verse = itemData['reference'];
                                       caption = itemData['content'];
                                     });
                                   },
