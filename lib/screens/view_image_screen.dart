@@ -325,7 +325,7 @@ class _ViewImageScreenState extends State<ViewImageScreen> {
                                         width: 400,
                                         height: 400,
                                         child: TextBold(
-                                          text: '$verse: $caption',
+                                          text: '$caption, $verse',
                                           fontSize: fontSize,
                                           color: textColor,
                                         ),
@@ -334,7 +334,7 @@ class _ViewImageScreenState extends State<ViewImageScreen> {
                                         width: 400,
                                         height: 400,
                                         child: TextBold(
-                                          text: '$verse: $caption',
+                                          text: '$caption, $verse',
                                           fontSize: fontSize,
                                           color: textColor,
                                         ),
@@ -343,7 +343,7 @@ class _ViewImageScreenState extends State<ViewImageScreen> {
                                         width: 400,
                                         height: 400,
                                         child: TextBold(
-                                          text: '$verse: $caption',
+                                          text: '$caption, $verse',
                                           fontSize: fontSize,
                                           color: textColor,
                                         ),

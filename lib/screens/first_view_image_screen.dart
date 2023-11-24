@@ -301,7 +301,7 @@ class _FirstViewImageScreenState extends State<FirstViewImageScreen> {
                                 child: Align(
                                   alignment: ali,
                                   child: TextBold(
-                                    text: '$verse: $caption',
+                                    text: '$caption, $verse',
                                     fontSize: fontSize,
                                     color: textColor,
                                   ),
