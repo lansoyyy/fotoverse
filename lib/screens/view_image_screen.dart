@@ -39,6 +39,7 @@ class _ViewImageScreenState extends State<ViewImageScreen> {
     Colors.purple,
   ];
   String caption = '';
+  String verse = '';
 
   Color textColor = Colors.white;
 
@@ -324,7 +325,7 @@ class _ViewImageScreenState extends State<ViewImageScreen> {
                                         width: 400,
                                         height: 400,
                                         child: TextBold(
-                                          text: caption,
+                                          text: '$verse: $caption',
                                           fontSize: fontSize,
                                           color: textColor,
                                         ),
@@ -333,7 +334,7 @@ class _ViewImageScreenState extends State<ViewImageScreen> {
                                         width: 400,
                                         height: 400,
                                         child: TextBold(
-                                          text: caption,
+                                          text: '$verse: $caption',
                                           fontSize: fontSize,
                                           color: textColor,
                                         ),
@@ -342,7 +343,7 @@ class _ViewImageScreenState extends State<ViewImageScreen> {
                                         width: 400,
                                         height: 400,
                                         child: TextBold(
-                                          text: caption,
+                                          text: '$verse: $caption',
                                           fontSize: fontSize,
                                           color: textColor,
                                         ),
@@ -373,6 +374,7 @@ class _ViewImageScreenState extends State<ViewImageScreen> {
                                   caption = verses.isNotEmpty
                                       ? verses[index]['content']
                                       : widget.quotes[index]['content'];
+                                  verse = verses[index]['reference'];
                                 });
                               },
                               child: TextBold(
