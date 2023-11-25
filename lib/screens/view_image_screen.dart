@@ -374,7 +374,7 @@ class _ViewImageScreenState extends State<ViewImageScreen> {
                                   caption = verses.isNotEmpty
                                       ? verses[index]['content']
                                       : widget.quotes[index]['content'];
-                                  verse = verses[index]['reference'];
+                                  verse = widget.quotes[index]['reference'];
                                 });
                               },
                               child: TextBold(
