@@ -124,10 +124,11 @@ class HomeScreen extends StatelessWidget {
                             itemCount: data.docs.length,
                             gridDelegate:
                                 const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2),
+                                    crossAxisCount: 1),
                             itemBuilder: (context, index) {
                               return Padding(
-                                padding: const EdgeInsets.all(5),
+                                padding:
+                                    const EdgeInsets.fromLTRB(5, 10, 5, 10),
                                 child: Container(
                                   height: 350,
                                   width: double.infinity,
@@ -166,7 +167,7 @@ class HomeScreen extends StatelessWidget {
                                           height: 10,
                                         ),
                                         Container(
-                                          height: 95,
+                                          height: 250,
                                           width: double.infinity,
                                           decoration: BoxDecoration(
                                             color: Colors.white,
