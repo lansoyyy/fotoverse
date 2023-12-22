@@ -1,15 +1,83 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:fotoverse/screens/add_image_screen.dart';
 import 'package:fotoverse/screens/pages/profile_page.dart';
 import 'package:fotoverse/utils/colors.dart';
 import 'package:fotoverse/widgets/drawer_widget.dart';
 import 'package:fotoverse/widgets/text_widget.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:tflite/tflite.dart';
 
-class HomeScreen extends StatelessWidget {
+import '../services/api_service.dart';
+import '../widgets/toast_widget.dart';
+import 'first_view_image_screen.dart';
+
+class HomeScreen extends StatefulWidget {
   const HomeScreen({
     Key? key,
   }) : super(key: key);
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  late File _image;
+  List _results = [];
+  bool imageSelect = false;
+  @override
+  void initState() {
+    super.initState();
+    loadModel();
+  }
+
+  Future loadModel() async {
+    Tflite.close();
+    String res;
+    res = (await Tflite.loadModel(
+        model: "assets/model/model.tflite",
+        labels: "assets/model/labels.txt"))!;
+    print("Models loading status: $res");
+  }
+
+  Future imageClassification(File image) async {
+    final List? recognitions = await Tflite.runModelOnImage(
+      path: image.path,
+      numResults: 6,
+      threshold: 0.05,
+      imageMean: 127.5,
+      imageStd: 127.5,
+    );
+    setState(() {
+      _results = recognitions!;
+      _image = image;
+      imageSelect = true;
+    });
+
+    Future quotes = ApiService().getBibleVerses(_results[0]['label']);
+
+    // Future quotes = ApiService().getBibleVerses('peace');
+
+    quotes.then((value) {
+      if (value['results'].isNotEmpty) {
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => FirstViewImageScreen(
+                  imageFile: _image,
+                  quotes: value['results'],
+                )));
+      } else {
+        showToast('Image not recognized! Try again...');
+      }
+    });
+
+    // Navigator.of(context).push(MaterialPageRoute(
+    //     builder: (context) => ViewImageScreen(
+    //           imageFile: _image,
+    //           quotes: quotes,
+    //         )));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,9 +90,38 @@ class HomeScreen extends StatelessWidget {
             color: Colors.white,
           ),
           onPressed: () async {
-            // await FirebaseAuth.instance.signOut();
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => const AddImageScreen()));
+            showModalBottomSheet(
+              context: context,
+              builder: (context) {
+                return SizedBox(
+                    height: 150,
+                    child: Column(
+                      children: [
+                        ListTile(
+                          onTap: () {
+                            pickImage(true);
+                          },
+                          leading: const Icon(Icons.camera),
+                          title: TextRegular(
+                              text: 'Camera',
+                              fontSize: 18,
+                              color: Colors.black),
+                        ),
+                        const Divider(),
+                        ListTile(
+                          onTap: () {
+                            pickImage(false);
+                          },
+                          leading: const Icon(Icons.photo),
+                          title: TextRegular(
+                              text: 'Gallery',
+                              fontSize: 18,
+                              color: Colors.black),
+                        ),
+                      ],
+                    ));
+              },
+            );
           }),
       body: Container(
         height: double.infinity,
@@ -193,5 +290,40 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future pickImage(bool isCamera) async {
+    final ImagePicker _picker = ImagePicker();
+    final XFile? pickedFile = await _picker.pickImage(
+      source: isCamera ? ImageSource.camera : ImageSource.gallery,
+    );
+    File image = File(pickedFile!.path);
+
+    CroppedFile? croppedFile = await ImageCropper().cropImage(
+      sourcePath: image.path,
+      aspectRatioPresets: [
+        CropAspectRatioPreset.square,
+        CropAspectRatioPreset.ratio3x2,
+        CropAspectRatioPreset.original,
+        CropAspectRatioPreset.ratio4x3,
+        CropAspectRatioPreset.ratio16x9
+      ],
+      uiSettings: [
+        AndroidUiSettings(
+            toolbarTitle: 'Cropper',
+            toolbarColor: Colors.deepOrange,
+            toolbarWidgetColor: Colors.white,
+            initAspectRatio: CropAspectRatioPreset.original,
+            lockAspectRatio: false),
+        IOSUiSettings(
+          title: 'Cropper',
+        ),
+        WebUiSettings(
+          context: context,
+        ),
+      ],
+    );
+
+    imageClassification(File(croppedFile!.path));
   }
 }
